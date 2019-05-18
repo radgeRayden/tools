@@ -72,8 +72,12 @@ local function generate()
 
         end
     end
-    local success, message = love.filesystem.write( love.math.random() .. ".bin", out_data )
-    if not success then love.window.showMessageBox("Failed to write file.", message, "error") end
+    local success, message = love.filesystem.write( "imgdump-" .. love.math.random() .. ".bin", out_data )
+    if not success then 
+        love.window.showMessageBox("Failed to write file.", message, "error") 
+    else
+        love.system.openURL(love.filesystem.getSaveDirectory())
+    end
 end
 
 local button
