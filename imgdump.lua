@@ -61,13 +61,16 @@ local function generate()
             for ty=0, rows_per_sprite - 1 do
                 local row = {}
                 for tx=0, (row_size * src_components) - 1, src_components do
-                    --index is in bytes so we don't divide by number of components
-                    local pixel_index = ((y * rows_per_sprite) * sheet_width) + (x * rows_per_sprite * row_size) + (ty * row_size) + tx + 1
+                    -- kinda stupid but had to multiply by 4 cause it was easier than rewriting the loop
+                    local pixel_index = ((((y * rows_per_sprite) + ty) * sheet_width * 4) + (x * row_size * 4) + tx) + 1 
+                    print(tx, ty, pixel_index, bin:byte(pixel_index, pixel_index + 2))
                     table.insert(row, rgb2index(bin:byte(pixel_index, pixel_index + 2))) --here we ignore alpha for obv reasons
                 end
                 assert(row_counter < out_data:getSize(), row_counter)
                 rows[row_counter], rows[row_counter + 1] = convert_to_2bpp(row)
+                print(bit.tohex(rows[row_counter]), bit.tohex(rows[row_counter + 1]))
                 row_counter = row_counter + 2
+                io.read()
             end
 
         end
